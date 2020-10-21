@@ -41,34 +41,33 @@ pr:
     - SECURITY.md
     - THIRD-PARTY-NOTICES.TXT
 
-stages:
-- stage: Build
+tages:
+- stage: build
+  displayName: build
   jobs:
-
-  #
-  # Build on Debug configuration
-  #
-  - template: /eng/pipelines/templates/platform-matrix.yml
+  - template: eng/templates/build-job.yml
     parameters:
-      jobTemplate: /eng/pipelines/templates/build-job.yml
-      buildConfig: Debug
-      platforms:
-      - Linux_x64
-      - Windows_NT_x64
-      - OSX_x64
-      jobParameters:
-        isOfficialBuild: ${{ variables.isOfficialBuild }}
+      name: Windows_NT_x64
+      displayName: Windows_NT x64
+      osGroup: Windows_NT
+      archType: x64
+      pool:
+        vmImage: 'windows-latest'
 
-  #
-  # Build on Release configuration
-  #
-  - template: /eng/pipelines/templates/platform-matrix.yml
+  - template: eng/templates/build-job.yml
     parameters:
-      jobTemplate: /eng/pipelines/templates/build-job.yml
-      buildConfig: Release
-      platforms:
-      - Linux_x64
-      - Windows_NT_x64
-      - OSX_x64
-      jobParameters:
-        isOfficialBuild: ${{ variables.isOfficialBuild }}
+      name: OSX_x64
+      displayName: OSX x64
+      osGroup: OSX
+      archType: x64
+      pool:
+        vmImage: 'macOS-latest'
+
+  - template: eng/templates/build-job.yml
+    parameters:
+      name: Linux_x64
+      displayName: Linux x64
+      osGroup: Linux
+      archType: x64
+      pool:
+        vmImage: 'ubuntu-latest'
